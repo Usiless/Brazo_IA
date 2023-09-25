@@ -8,13 +8,13 @@ from IA import DocTypeRec
 
 arduino = Serial(port='COM4', baudrate=115200, timeout=.1)
 
-def write_read(x):
+def write_read(x): #Comunicación con el arduino
     arduino.write(bytes(x, 'utf-8'))
     time.sleep(0.05)
     data = arduino.readline()
     return data
 
-def transcribe_speech():
+def transcribe_speech(): #Reconocimiento de voz
     recognizer = sr.Recognizer()
 
     with sr.Microphone() as source:
@@ -40,7 +40,7 @@ def transcribe_speech():
 if __name__ == "__main__":
     while True:
         print ("Presiona 'Espacio' para hablar. Presiona 'Escape' para salir.")
-        if keyboard.is_pressed("space"):
+        if keyboard.is_pressed("space"): #Activar micro
             text = transcribe_speech()
             if text != None:
                 try:
@@ -51,7 +51,7 @@ if __name__ == "__main__":
                 except TypeError:
                     print("Comando no especificado")
                 time.sleep(2.5)
-        if keyboard.is_pressed("5"):
+        if keyboard.is_pressed("5"): #Saludar
             text = "hola"
             combo = DocTypeRec(text)
             for par in combo:
@@ -106,7 +106,7 @@ if __name__ == "__main__":
                 value = write_read(f"{servo}, {grados}")
                 print(value)
                 time.sleep(2.5)
-        if keyboard.is_pressed("0"):
+        if keyboard.is_pressed("0"): #Reiniciar posición
             print(0)
             value = write_read("0")
         if keyboard.is_pressed("esc"):
