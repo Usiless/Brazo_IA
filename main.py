@@ -6,7 +6,7 @@ from serial import Serial
 import time
 from IA import DocTypeRec
 
-arduino = Serial(port='COM4', baudrate=115200, timeout=.1)
+arduino = Serial(port='COM4', baudrate=9600, timeout=0.1)
 
 def write_read(x): #Comunicación con el arduino
     arduino.write(bytes(x, 'utf-8'))
@@ -45,19 +45,29 @@ if __name__ == "__main__":
             if text != None:
                 try:
                     servo, grados = DocTypeRec(text)
-                    value = write_read(f"{servo}, {grados}")
-                    print(servo, grados)
-                    print(value)
-                except TypeError:
-                    print("Comando no especificado")
+                    if isinstance(servo, int):
+                        print(servo, grados)
+                        value = write_read(f"{servo}, {grados}")
+                        print(value)
+                    else:
+                        cant_elem = len(servo)
+                        aux = []
+                        for i in range(0,cant_elem):
+                            value = write_read(f"{servo[i]}, {grados[i]}")
+                            print(value)
+                            print(f"{servo[i]}, {grados[i]}")
+                            time.sleep(0.5)
+                except TypeError as e:
+                    print(f"Comando no especificado: {e}")
                 time.sleep(2.5)
         if keyboard.is_pressed("5"): #Saludar
             text = "hola"
-            combo = DocTypeRec(text)
-            for par in combo:
-                value = write_read(f"{par[0]}, {par[1]}")
-                print(f"{par[0]}, {par[1]}")
+            servo, grados = DocTypeRec(text)
+            cant_elem = len(servo)
+            for i in range(0,cant_elem):
+                value = write_read(f"{servo[i]}, {grados[i]}")
                 print(value)
+                print(f"{servo[i]}, {grados[i]}")
                 time.sleep(0.5)
         if keyboard.is_pressed("up"):
             text = "movete hacia arriba"
@@ -98,6 +108,7 @@ if __name__ == "__main__":
                 print(servo, grados)
                 value = write_read(f"{servo}, {grados}")
                 print(value)
+                time.sleep(2.5)
         if keyboard.is_pressed("3"):
             text = "movete hacia atrás"
             if text != None:

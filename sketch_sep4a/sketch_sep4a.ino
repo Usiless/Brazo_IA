@@ -21,7 +21,7 @@ void setup() {
   serv4.attach(9,130);
   // serv4.write(130);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.setTimeout(1);
 }
 
@@ -63,7 +63,7 @@ void loop() {
   }
 
   // //Pruebas COM
-  //while (!Serial.available()30311);
+  //while (!Serial.available());
   y = Serial.readString();
   if (y == "0") {
     inicio();
@@ -76,29 +76,30 @@ void loop() {
       serv1.easeTo(grados,40);
       Serial.print("izquierda, derecha ");
       Serial.print(y);
-      Serial.print(" ");
       y = "";
     }    
     if (servo == "2") {
       serv2.easeTo(grados,90);
       Serial.print("abre, cierra ");
       Serial.print(y);
-      Serial.print(" ");
       y = "";
     }
     if (servo == "3") {
       serv3.easeTo(grados,40);
       Serial.print("enfrente, atrás ");
       Serial.print(y);
-      Serial.print(" ");
       y = "";
     }
     if (servo == "4") {
       serv4.easeTo(grados,40);
       Serial.print("arriba, abajo ");
       Serial.print(y);
-      Serial.print(" ");
       y = "";
+    }
+    if (Serial.available()){
+      Serial.flush();
+      Serial.end();
+      Serial.begin(9600);
     }
   }
 

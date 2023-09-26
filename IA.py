@@ -21,20 +21,19 @@ for mov in mov_vars:
         patterns.append(pattern)
 matcher.add("mover", patterns) #Se añade la rule al modelo
 
-pattern = [{"LEMMA": "hola"}] #Otra rule para el saludo
+pattern = [{"LOWER": "hola"}] #Otra rule para el saludo
 matcher.add("saludo", [pattern])
 
-
 def DocTypeRec(STT): #Fucnión de "inicio" que agarra el texto y decide qué rule se disparó y eligiendo la función para esa rule
+    string_id = ""
     doc = nlp(STT)
     matches = matcher(doc)
     for match_id, start, end in matches:
-        string_id = nlp.vocab.strings[match_id] 
-        break
+        string_id = nlp.vocab.strings[match_id]
     if string_id == "mover":
         return defined_mov(doc) 
     if string_id == "saludo":
-        return Hola() 
+        return Hola()
 
 def defined_mov(doc): #Función de movimiento predefinido
     matches = matcher(doc) #Trata de reconocer la oración
@@ -52,8 +51,9 @@ def defined_mov(doc): #Función de movimiento predefinido
                     return servo, grados
                 
 def Hola(): #La función mueve el servo 3(frente y atrás), luego abre y cierra la garra 2 veces
-    saludo = [[3,60],[2,180],[2,10],[2,180],[2,10]]
-    return saludo
+    servo = [3,2,2,2,2,]
+    grados = [60,180,10,180,10]
+    return servo, grados
                 
 def DescomponeOracion(doc): #Función de debugueo, sirve para descomponer una oración y ver cada uno de sus componentes
     doc = nlp(doc)
@@ -62,5 +62,6 @@ def DescomponeOracion(doc): #Función de debugueo, sirve para descomponer una or
         print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
     for match_id, start, end in matches:
         matched_span = doc[start:end]
+        print(matched_span)
 
-#DescomponeOracion("mover a la izquierda")
+DescomponeOracion("Hola")
